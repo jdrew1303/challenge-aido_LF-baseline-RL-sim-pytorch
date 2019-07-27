@@ -51,15 +51,60 @@ class ImgWrapper(gym.ObservationWrapper):
 class DtRewardWrapper(gym.RewardWrapper):
     def __init__(self, env):
         super(DtRewardWrapper, self).__init__(env)
+        self.env = env
+        reward = 0
+        previous_angle = None
+
+
+    def reset(self, **kwargs):
+        self.previous_angle = None
+        self.reward = 0
+        print('reset reward function')
+        return self.env.reset(**kwargs)
 
     def reward(self, reward):
-        if reward == -1000:
-            reward = -10
-        elif reward > 0:
-            reward += 10
-        else:
-            reward += 4
+        
+        speed = self.env.speed
+        current_position = self.env.cur_pos
+        current_angle = self.env.cur_angle
 
+        print("speed: {speed} position: {position} angle: {angle}")
+        # check if the bot is in the lane.
+        try:
+            lane_position = self.env.get_lane_pos2(current_position, current_angle)
+        except NotInLane:
+            # the further you are away the bigger the penalty
+            lane_reward = -20 * np.abs(lane_position.dist) * speed
+        else:
+            # the closer you are the centre the greater the reward
+            lane_reward = 20 / np.abs(lane_position.dist) * speed
+
+        # check if the bot is wobbling, waddling or shaking
+        # we want a smooth driving experience
+        if self.previous_angle == None: 
+            angle_difference = 0
+        else:
+            angle_difference = 180 * np.abs(self.previous_angle - current_angle)
+        # If the angle is greater than 20 degrees
+        if angle_difference > 20:
+            angle_reward = -10 * angle_difference * speed
+        else:
+            angle_reward = 10 * speed
+
+        # Compute the collision avoidance penalty
+        is_too_close_to_obstacle = self.env._proximity_penalty2(current_position, current_angle)
+
+        # high speed crashes are to be discouraged
+        has_collision_penalty = (is_too_close_to_obstacle > 0)
+        if has_collision_penalty:
+            colission_penalty = (-10 + collision_penalty) * speed
+        else: 
+            colission_penalty = 10 * speed
+
+        # Compute the reward
+        reward += lane_reward + angle_reward + colission_penalty
+        self.previous_angle = current_angle;
+        print("toal current reward: {reward}")
         return reward
 
 
