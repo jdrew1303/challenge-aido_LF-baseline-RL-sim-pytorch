@@ -6,6 +6,7 @@ import gym
 import gym_duckietown
 import os
 
+from gym.wrappers import Monitor
 from args import get_ddpg_args_train
 from ddpg import DDPG
 from utils import seed, evaluate_policy, ReplayBuffer
@@ -37,6 +38,7 @@ env = NormalizeWrapper(env)
 env = ImgWrapper(env) # to make the images from 160x120x3 into 3x160x120
 env = ActionWrapper(env)
 env = DtRewardWrapper(env)
+env = Monitor(env, "./videos", video_callable=lambda episode_id: True,force=True)
 
 
 # Set seeds
