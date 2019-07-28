@@ -11,7 +11,7 @@ from args import get_ddpg_args_train
 from ddpg import DDPG
 from utils import seed, evaluate_policy, ReplayBuffer
 from wrappers import NormalizeWrapper, ImgWrapper, \
-    DtRewardWrapper, ActionWrapper, ResizeWrapper, Monitor
+    DtRewardWrapper, ActionWrapper, ResizeWrapper
 from env import launch_env
 
 policy_name = "DDPG"
