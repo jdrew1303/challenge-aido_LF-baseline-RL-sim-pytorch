@@ -57,7 +57,7 @@ class DtRewardWrapper(gym.RewardWrapper):
     def reset(self, **kwargs):
         self.previous_angle = None
         print('reset reward function')
-        return self.env.reset(**kwargs)
+        return self.simulator.reset(**kwargs)
 
     def reward(self, reward):
 
