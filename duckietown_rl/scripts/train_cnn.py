@@ -6,6 +6,7 @@ import gym
 import gym_duckietown
 import os
 
+from gym.wrappers import Monitor
 from args import get_ddpg_args_train
 from ddpg import DDPG
 from utils import seed, evaluate_policy, ReplayBuffer
