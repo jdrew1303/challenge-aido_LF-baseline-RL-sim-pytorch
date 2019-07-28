@@ -51,13 +51,11 @@ class ImgWrapper(gym.ObservationWrapper):
 class DtRewardWrapper(gym.RewardWrapper):
     def __init__(self, env):
         super(DtRewardWrapper, self).__init__(env)
-        reward = 0
         previous_angle = None
 
 
     def reset(self, **kwargs):
         self.previous_angle = None
-        self.reward = 0
         print('reset reward function')
         return self.env.reset(**kwargs)
 
@@ -101,7 +99,7 @@ class DtRewardWrapper(gym.RewardWrapper):
             colission_penalty = 10 * speed
 
         # Compute the reward
-        reward += lane_reward + angle_reward + colission_penalty
+        reward = lane_reward + angle_reward + colission_penalty
         self.previous_angle = current_angle;
         print("toal current reward: {reward}")
         return reward
