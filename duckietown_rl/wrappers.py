@@ -67,7 +67,7 @@ class DtRewardWrapper(gym.RewardWrapper):
         current_position = self.simulator.cur_pos
         current_angle = self.simulator.cur_angle
 
-        print(f'speed: {speed} position: {position} angle: {angle}')
+        print(f'speed: {speed} position: {current_position} angle: {current_angle}')
         # check if the bot is in the lane.
         try:
             lane_position = self.simulator.get_lane_pos2(current_position, current_angle)
