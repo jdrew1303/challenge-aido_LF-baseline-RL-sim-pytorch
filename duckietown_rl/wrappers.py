@@ -70,10 +70,10 @@ class DtRewardWrapper(gym.RewardWrapper):
             lane_position = self.simulator.get_lane_pos2(current_position, current_angle)
         except NotInLane:
             # the further you are away the bigger the penalty
-            lane_reward = -20 * np.abs(lane_position.dist) * speed
+            lane_reward = -20 * np.abs(lane_position.dist) * (1 + speed)
         else:
             # the closer you are the centre the greater the reward
-            lane_reward = 20 / np.abs(lane_position.dist) * speed
+            lane_reward = 20 / np.abs(lane_position.dist) * (1 + speed)
 
         # check if the bot is wobbling, waddling or shaking
         # we want a smooth driving experience
@@ -83,9 +83,9 @@ class DtRewardWrapper(gym.RewardWrapper):
             angle_difference = 180 * np.abs(self.previous_angle - current_angle)
         # If the angle is greater than 20 degrees
         if angle_difference > 20:
-            angle_reward = -10 * angle_difference * speed
+            angle_reward = -10 * angle_difference * (1 + speed)
         else:
-            angle_reward = 10 * speed
+            angle_reward = 10 * (1 + speed)
 
         # Compute the collision avoidance penalty
         is_too_close_to_obstacle = self.simulator._proximity_penalty2(current_position, current_angle)
@@ -93,9 +93,9 @@ class DtRewardWrapper(gym.RewardWrapper):
         # high speed crashes are to be discouraged
         has_collision_penalty = (is_too_close_to_obstacle > 0)
         if has_collision_penalty:
-            colission_penalty = (-10 + collision_penalty) * speed
+            colission_penalty = (-10 + collision_penalty) * (1 + speed)
         else: 
-            colission_penalty = 10 * speed
+            colission_penalty = 10 * (1 + speed)
 
         # Compute the reward
         reward = lane_reward + angle_reward + colission_penalty
