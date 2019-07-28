@@ -34,7 +34,8 @@ env = launch_env()
 
 # Wrappers
 env = DtRewardWrapper(env)
-env = Monitor(env, "./videos", video_callable=lambda episode_id: True,force=True)
+# disabled until the training step is reworked to handle max timesteps and done properly.
+# env = Monitor(env, "./videos", video_callable=lambda episode_id: True,force=True)
 env = ResizeWrapper(env)
 env = NormalizeWrapper(env)
 env = ImgWrapper(env) # to make the images from 160x120x3 into 3x160x120

@@ -59,10 +59,7 @@ class DtRewardWrapper(gym.RewardWrapper):
         print('reset reward function')
         return self.simulator.reset(**kwargs)
 
-    def reward(self, reward):
-
-        # get_agent_info()
-        
+    def reward(self, reward):        
         speed = self.simulator.speed
         current_position = self.simulator.cur_pos
         current_angle = self.simulator.cur_angle
