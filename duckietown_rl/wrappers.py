@@ -51,8 +51,8 @@ class ImgWrapper(gym.ObservationWrapper):
 class DtRewardWrapper(gym.RewardWrapper):
     def __init__(self, env):
         super(DtRewardWrapper, self).__init__(env)
-        simulator = env;
-        previous_angle = None
+        self.simulator = env;
+        self.previous_angle = None
 
     def reset(self, **kwargs):
         self.previous_angle = None
