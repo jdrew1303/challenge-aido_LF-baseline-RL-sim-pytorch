@@ -6,12 +6,11 @@ import gym
 import gym_duckietown
 import os
 
-from gym.wrappers import Monitor
 from args import get_ddpg_args_train
 from ddpg import DDPG
 from utils import seed, evaluate_policy, ReplayBuffer
 from wrappers import NormalizeWrapper, ImgWrapper, \
-    DtRewardWrapper, ActionWrapper, ResizeWrapper
+    DtRewardWrapper, ActionWrapper, ResizeWrapper, Monitor
 from env import launch_env
 
 policy_name = "DDPG"
@@ -33,12 +32,12 @@ if args.save_models and not os.path.exists("./pytorch_models"):
 env = launch_env()
 
 # Wrappers
+env = Monitor(env, "./videos", video_callable=lambda episode_id: True,force=True)
 env = ResizeWrapper(env)
 env = NormalizeWrapper(env)
 env = ImgWrapper(env) # to make the images from 160x120x3 into 3x160x120
 env = ActionWrapper(env)
 env = DtRewardWrapper(env)
-env = Monitor(env, "./videos", video_callable=lambda episode_id: True,force=True)
 
 
 # Set seeds
