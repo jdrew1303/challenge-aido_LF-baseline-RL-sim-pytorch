@@ -80,12 +80,12 @@ class DtRewardWrapper(gym.RewardWrapper):
         if self.previous_angle == None: 
             angle_difference = 0
         else:
-            angle_difference = 180 * np.abs(self.previous_angle - current_angle)
+            angle_difference = np.abs(self.previous_angle - current_angle)
         # If the angle is greater than 20 degrees
         if angle_difference > 20:
-            angle_reward = -10 * angle_difference * (1 + speed)
+            angle_reward = -angle_difference
         else:
-            angle_reward = 10 * (1 + speed)
+            angle_reward = angle_difference
 
         # # Compute the collision avoidance penalty
         # is_too_close_to_obstacle = self.simulator._proximity_penalty2(current_position, current_angle)
